@@ -47,6 +47,7 @@ public class CeeLo
            
          human.playerRolls();
          computer.playerRolls();
+         
          gameInstance.showRoll(human);
          gameInstance.showRoll(computer);
       
@@ -57,7 +58,7 @@ public class CeeLo
          System.out.println("The winner is: " + victor);
          
          wallet = gameInstance.adjustWallet(victor, wallet, bet, human, computer);
-          
+         
                                                                                   
      }  while (wallet > 0.0);
     
@@ -83,15 +84,16 @@ public class CeeLo
    // 4, 5, 6 is an automatic win
    
    if(array.get(0) == 4 && array.get(1) == 5 && array.get(2) == 6)
-   {
-      System.out.println("456: Automatic win!\n" );
+   {  
+      
+      System.out.println("-----456: Automatic win!-----\n" );
       playerScore = 100; //high number not achieved by any other rolls
    
    }
    // 1, 2, 3 is an automatic loss
    else if (array.get(0) == 1 && array.get(1) == 2 && array.get(2) == 3)
     {
-         System.out.println("123: Automatic loss!\n");
+         System.out.println("-----123: Automatic loss!-----\n");
          playerScore = -100; //no roll can give neg value
     }
    //sorted array may either have two of same number at beginning or end - leftover is score
@@ -121,7 +123,7 @@ public class CeeLo
       showRoll(x);
       playerScore = gameLogic(x.getDieValues(), x);
    }
- x.getDieValues().clear();//empty arraylist so it doesn't get filled dynamically on next roll and same roll returned
+      x.getDieValues().clear();//empty arraylist so it doesn't get filled dynamically on next roll and same roll returned
  
  return playerScore;
  }
@@ -138,17 +140,14 @@ public class CeeLo
  public String calculateWinner(int a, int b, Player x, Player ai)
  {
    String winner = " ";
+   
    if(a > b)
    {
       winner = x.getName();
-      
-      
    }
    else if ( a <  b)
    {
       winner = ai.getName();
-      
-      
    }
    else
    {
@@ -156,7 +155,6 @@ public class CeeLo
       winner = "Nobody";
    }
    return winner;
-   
  }
 /**
 *   adjustWallet deducts lost bet or adds winnings to wallet amount
@@ -208,34 +206,37 @@ public class CeeLo
 *  zero and within the wallet amount.
 *
 * @param double max = wallet amount
-* @return value
+* @return value : amount player wants to bet
 */
 public double input(double max) throws IOException
    {
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
       double value;
       
-      value = Double.parseDouble(br.readLine());;
+      value = Double.parseDouble(br.readLine());
       
       if(value < 0 || value > max)
+        
          value = validation(value, max);
-      
+        
       return value;
    }
 /**
-*  validation tells player if they input an amount 0 or less, or more than they have in the wallet 
-* and takes in input until it meets the rules. Returns to input method. 
+*  validation tells player if they input an amount 0 or less, or more than they have in the wallet; 
+*  retakes input until conditions satisfied. 
 *
 *
-* @param double x = amount a player wants to bet
-* @param double max = wallet amount
+* @param double x : amount a player wants to bet
+* @param double max : wallet amount
+
+  @return x : amount the player wants to bet - returns as <code>double</code>
 */   
 public double validation(double x, double max) throws IOException
    {
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
       
-      while( x < 0 || x > max)
+      while( x <= 0 || x > max)
       {
          System.out.println("\nValue must be greater than 0! Max bet = whole wallet.\n");
          x = Double.parseDouble(br.readLine());
@@ -282,37 +283,41 @@ class Die
 }
 
 class Player
-{
+{  
    private String name;
-   private ArrayList<Integer> dieValues = new ArrayList<>();   
-   //final int size = 3;
-   //this.dieValues = new int[size];
-   private final int SIZE = 3;
+   private ArrayList<Integer> dieValues;
+   
+   Player()
+   {
+      this.dieValues = new ArrayList<>();
+   
+   }
+
+  
+   
+   private final int numDie = 3;
    private final int numSides = 6;
 
-         
    void playerRolls()
    {
-      ArrayList<Die> dieArray = new ArrayList<>(SIZE);
+      ArrayList<Die> dieArray = new ArrayList<>(numDie);
              
       
-      for (int i = 0; i < SIZE; i++)
+      for (int i = 0; i < numDie; i++)
       {
          dieArray.add(new Die(numSides));
          
       }
       
-      for (int i = 0; i < SIZE; i++)
+      for (int i = 0; i < numDie; i++)
       {
          
          dieValues.add(i, dieArray.get(i).getValue());
-         
-
       }
       
-      Collections.sort(dieValues); 
-     
-     } 
+         Collections.sort(dieValues); 
+         dieArray.clear();
+    } 
     
     
     ArrayList<Integer> getDieValues()
